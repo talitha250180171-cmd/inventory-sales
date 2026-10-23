@@ -11,11 +11,14 @@
     <div class="container">
         <a class="navbar-brand" href="{{ route('dashboard') }}">Inventory &amp; Sales</a>
 @auth
-    @if (auth()->user()->isAdmin())
-        <a class="nav-link text-light" href="{{ route('categories.index') }}">Kategori</a>
-    @endif
+    <div class="d-flex gap-3 me-auto ms-4">
+        <a class="nav-link text-light" href="{{ route('products.index') }}">Produk</a>
+        @if (auth()->user()->isAdmin())
+            <a class="nav-link text-light" href="{{ route('categories.index') }}">Kategori</a>
+            <a class="nav-link text-light" href="{{ route('suppliers.index') }}">Supplier</a>
+        @endif
+    </div>
 @endauth
-
         @auth
             <div class="d-flex align-items-center text-white">
                 <span class="me-3">
