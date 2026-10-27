@@ -14,6 +14,7 @@
     <div class="d-flex gap-3 me-auto ms-4">
         <a class="nav-link text-light" href="{{ route('products.index') }}">Produk</a>
         <a class="nav-link text-light" href="{{ route('purchases.index') }}">Pembelian</a>
+        <a class="nav-link text-light" href="{{ route('sales.index') }}">Penjualan</a>
         @if (auth()->user()->isAdmin())
             <a class="nav-link text-light" href="{{ route('categories.index') }}">Kategori</a>
             <a class="nav-link text-light" href="{{ route('suppliers.index') }}">Supplier</a>
