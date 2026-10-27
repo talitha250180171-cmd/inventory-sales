@@ -110,6 +110,8 @@ Relasi Eloquent: `Category hasMany Product`, `Product belongsTo Category`, `Purc
 | 9 | Batalkan penjualan | Status cancelled, stok kembali | Lulus |
 | 10 | Staff membuka detail transaksi milik user lain | Halaman 403 | Lulus |
 | 11 | Search dan filter pada daftar produk | Hasil sesuai filter | Lulus |
+| 12 | Tambah produk dengan harga negatif | Ditolak oleh validasi | Lulus |
+| 13 | Pindah halaman pagination saat filter aktif | Filter tetap terjaga | Lulus |
 
 ## Tampilan Aplikasi
 

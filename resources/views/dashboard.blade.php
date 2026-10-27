@@ -61,6 +61,24 @@
         </div>
     </div>
 
+        <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted">Penjualan Hari Ini</div>
+                    <div class="fs-3 fw-bold text-success">Rp {{ number_format($salesToday, 0, ',', '.') }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted">Penjualan Bulan Ini</div>
+                    <div class="fs-3 fw-bold text-success">Rp {{ number_format($salesMonth, 0, ',', '.') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row g-3">
         <div class="col-lg-6">
             <div class="card shadow-sm h-100">

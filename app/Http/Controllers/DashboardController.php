@@ -28,6 +28,11 @@ class DashboardController extends Controller
                 ->get(),
             'salesCount' => $sales()->count(),
             'salesTotal' => $sales()->sum('total_amount'),
+                        'salesToday' => $sales()->whereDate('sale_date', today())->sum('total_amount'),
+            'salesMonth' => $sales()
+                ->whereYear('sale_date', now()->year)
+                ->whereMonth('sale_date', now()->month)
+                ->sum('total_amount'),
             'purchasesCount' => $purchases()->count(),
             'purchasesTotal' => $purchases()->sum('total_amount'),
             'recentSales' => Sale::with('user')
