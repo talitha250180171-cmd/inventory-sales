@@ -146,4 +146,4 @@
             </div>
         </div>
     </div>
-@endsectionphp
+@endsection
