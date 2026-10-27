@@ -1,66 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventory & Sales Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web manajemen produk, pemasok, pembelian (stok masuk), dan penjualan (stok keluar) untuk usaha distribusi kecil. Dibuat untuk UTS Pemrograman Web.
 
-## About Laravel
+## Teknologi
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.2+, Laravel 12
+- MySQL
+- Blade + Bootstrap 5 (via CDN)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Login/logout dengan password ter-hash, route diproteksi middleware
+- Dua role: **Admin** dan **Staff**
+- CRUD Kategori, Supplier, Produk (SKU unik, soft delete)
+- Pembelian: stok bertambah, mendukung banyak item
+- Penjualan: stok berkurang, ditolak jika stok tidak cukup
+- Pembatalan transaksi (admin) yang mengembalikan stok
+- Dashboard dengan angka dari database
+- Search, filter (kategori, status, tanggal, stok rendah), dan pagination
 
-## Learning Laravel
+## Hak Akses
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Fitur | Admin | Staff |
+|---|---|---|
+| Lihat produk | Ya | Ya |
+| Kelola kategori, supplier, produk | Ya | Tidak |
+| Buat pembelian dan penjualan | Ya | Ya |
+| Lihat transaksi | Semua | Miliknya saja |
+| Batalkan transaksi | Ya | Tidak |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Instalasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Prasyarat: PHP 8.2+, Composer, MySQL (XAMPP juga bisa).
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/talitha250180171-cmd/inventory-sales.git
+cd inventory-sales
+composer install
+copy .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Buat database kosong bernama `inventory_sales` di MySQL, lalu ubah bagian database di file `.env`:
 
-### Premium Partners
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inventory_sales
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Jalankan migration dan seeder, lalu server:
 
-## Contributing
+```bash
+php artisan migrate --seed
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Buka http://127.0.0.1:8000
 
-## Code of Conduct
+## Akun Demo
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@example.com | password123 |
+| Staff | staff@example.com | password123 |
 
-## Security Vulnerabilities
+## Business Rules
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Total transaksi dihitung di server, bukan dipercaya dari form
+- Harga penjualan diambil dari database
+- Seluruh proses transaksi (header, item, perubahan stok) berjalan dalam `DB::transaction`; jika satu langkah gagal, semuanya dibatalkan (rollback)
+- Penjualan ditolak jika stok tidak cukup
+- Pembatalan pembelian ditolak jika stok sudah terpakai (mencegah stok negatif)
+- Produk tidak di-hard delete (soft delete) agar riwayat transaksi tetap utuh
+- Kategori dan supplier yang masih dipakai tidak bisa dihapus
+- Otorisasi dijaga di server (middleware dan pengecekan kepemilikan), bukan sekadar menyembunyikan tombol
 
-## License
+## ERD
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```mermaid
+erDiagram
+    users ||--o{ purchases : "mencatat"
+    users ||--o{ sales : "mencatat"
+    categories ||--o{ products : "memiliki"
+    suppliers ||--o{ purchases : "memasok"
+    purchases ||--|{ purchase_items : "berisi"
+    sales ||--|{ sale_items : "berisi"
+    products ||--o{ purchase_items : "dibeli"
+    products ||--o{ sale_items : "dijual"
+```
+
+Relasi Eloquent: `Category hasMany Product`, `Product belongsTo Category`, `Purchase hasMany PurchaseItem`, `Sale hasMany SaleItem`, `Supplier hasMany Purchase`, `User hasMany Purchase/Sale`.
+
+## Pengujian (manual)
+
+| No | Skenario | Hasil yang diharapkan | Hasil |
+|---|---|---|---|
+| 1 | Login dengan password salah | Ditolak, muncul pesan error | Lulus |
+| 2 | Akses `/dashboard` tanpa login | Diarahkan ke halaman login | Lulus |
+| 3 | Staff membuka `/categories` | Halaman 403 | Lulus |
+| 4 | Tambah SKU produk yang sudah ada | Ditolak oleh validasi | Lulus |
+| 5 | Pembelian 2 item | Stok kedua produk bertambah, total benar | Lulus |
+| 6 | Penjualan 2 item | Stok kedua produk berkurang, harga dari database | Lulus |
+| 7 | Penjualan melebihi stok | Ditolak, tidak ada data tersimpan (rollback) | Lulus |
+| 8 | Produk yang sama dua kali dalam satu transaksi | Ditolak | Lulus |
+| 9 | Batalkan penjualan | Status cancelled, stok kembali | Lulus |
+| 10 | Staff membuka detail transaksi milik user lain | Halaman 403 | Belum diuji |
+| 11 | Search dan filter pada daftar produk | Hasil sesuai filter | Lulus |
+
+## Limitasi
+
+- SKU produk yang sudah dihapus (soft delete) tidak bisa dipakai ulang
+- Belum ada fitur retur sebagian atau pembayaran
+- Pengujian masih manual, belum memakai automated test
