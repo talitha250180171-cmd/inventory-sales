@@ -108,8 +108,38 @@ Relasi Eloquent: `Category hasMany Product`, `Product belongsTo Category`, `Purc
 | 7 | Penjualan melebihi stok | Ditolak, tidak ada data tersimpan (rollback) | Lulus |
 | 8 | Produk yang sama dua kali dalam satu transaksi | Ditolak | Lulus |
 | 9 | Batalkan penjualan | Status cancelled, stok kembali | Lulus |
-| 10 | Staff membuka detail transaksi milik user lain | Halaman 403 | Belum diuji |
+| 10 | Staff membuka detail transaksi milik user lain | Halaman 403 | Lulus |
 | 11 | Search dan filter pada daftar produk | Hasil sesuai filter | Lulus |
+
+## Tampilan Aplikasi
+
+**Login**
+
+![Login](docs/screenshots/01-login.png)
+
+**Dashboard**
+
+![Dashboard](docs/screenshots/02-dashboard.png)
+
+**Daftar Produk**
+
+![Produk](docs/screenshots/03-produk.png)
+
+**Form Penjualan**
+
+![Form Penjualan](docs/screenshots/04-form-penjualan.png)
+
+**Penjualan Ditolak karena Stok Tidak Cukup**
+
+![Stok Tidak Cukup](docs/screenshots/05-stok-tidak-cukup.png)
+
+**Detail Penjualan**
+
+![Detail Penjualan](docs/screenshots/06-detail-penjualan.png)
+
+**Akses Ditolak untuk Staff**
+
+![403](docs/screenshots/07-403.png)
 
 ## Limitasi
 
