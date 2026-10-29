@@ -18,6 +18,7 @@ Aplikasi web manajemen produk, pemasok, pembelian (stok masuk), dan penjualan (s
 - Pembatalan transaksi (admin) yang mengembalikan stok
 - Dashboard dengan angka dari database
 - Search, filter (kategori, status, tanggal, stok rendah), dan pagination
+- Upload foto produk (opsional, JPG/PNG/WEBP, maks. 2 MB)
 
 ## Hak Akses
 
@@ -56,6 +57,7 @@ Jalankan migration dan seeder, lalu server:
 
 ```bash
 php artisan migrate --seed
+php artisan storage:link
 php artisan serve
 ```
 
@@ -148,3 +150,4 @@ Relasi Eloquent: `Category hasMany Product`, `Product belongsTo Category`, `Purc
 - SKU produk yang sudah dihapus (soft delete) tidak bisa dipakai ulang
 - Belum ada fitur retur sebagian atau pembayaran
 - Pengujian masih manual, belum memakai automated test
+- Foto produk yang diunggah tidak ikut repository; produk dari seeder tampil dengan ikon pengganti
