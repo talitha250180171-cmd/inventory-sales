@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -48,7 +49,15 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0', 'max:9999999999'],
             'stock' => ['required', 'integer', 'min:0'],
             'min_stock' => ['required', 'integer', 'min:0'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            // Nama file dibuat acak oleh Laravel, bukan dari nama file pengguna
+            $data['image'] = $request->file('image')->store('products', 'public');
+        } else {
+            unset($data['image']);
+        }
 
         Product::create($data);
 
@@ -73,7 +82,26 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0', 'max:9999999999'],
             'min_stock' => ['required', 'integer', 'min:0'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_image' => ['nullable', 'boolean'],
         ]);
+
+        unset($data['remove_image']);
+
+        if ($request->hasFile('image')) {
+            // Foto baru menggantikan yang lama
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        } elseif ($request->boolean('remove_image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = null;
+        } else {
+            unset($data['image']);
+        }
 
         $product->update($data);
 
@@ -83,7 +111,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
-        // Soft delete: baris tetap ada, riwayat transaksi tidak rusak.
+        // Soft delete: baris dan fotonya tetap ada, riwayat transaksi tidak rusak.
         $product->delete();
 
         return redirect()->route('products.index')

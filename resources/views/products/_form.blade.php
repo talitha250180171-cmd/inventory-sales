@@ -83,5 +83,27 @@
     @enderror
 </div>
 
+<div class="mb-4">
+    <label for="image" class="form-label">Foto Produk (opsional)</label>
+
+    @if (isset($product) && $product->image)
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}"
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: .6rem; border: 1px solid #e5eaf3;">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="remove_image" name="remove_image" value="1">
+                <label class="form-check-label" for="remove_image">Hapus foto ini</label>
+            </div>
+        </div>
+    @endif
+
+    <input type="file" id="image" name="image" accept="image/png,image/jpeg,image/webp"
+           class="form-control @error('image') is-invalid @enderror">
+    @error('image')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <div class="form-text">Format JPG, PNG, atau WEBP. Maksimal 2 MB.</div>
+</div>
+
 <button type="submit" class="btn btn-primary">Simpan</button>
 <a href="{{ route('products.index') }}" class="btn btn-secondary">Batal</a>

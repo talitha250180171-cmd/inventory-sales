@@ -39,51 +39,65 @@
     </form>
 
     <div class="card shadow-sm">
-        <table class="table mb-0 align-middle">
-            <thead>
-                <tr>
-                    <th>SKU</th>
-                    <th>Nama</th>
-                    <th>Kategori</th>
-                    <th class="text-end">Harga</th>
-                    <th class="text-end">Stok</th>
-                    @if (auth()->user()->isAdmin())
-                        <th style="width: 160px;">Aksi</th>
-                    @endif
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($products as $product)
+        <div class="table-responsive">
+            <table class="table mb-0 align-middle">
+                <thead>
                     <tr>
-                        <td>{{ $product->sku }}</td>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ $product->category->name }}</td>
-                        <td class="text-end">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                        <td class="text-end">
-                            {{ $product->stock }}
-                            @if ($product->isLowStock())
-                                <span class="badge bg-danger">Rendah</span>
-                            @endif
-                        </td>
+                        <th style="width: 70px;">Foto</th>
+                        <th>SKU</th>
+                        <th>Nama</th>
+                        <th>Kategori</th>
+                        <th class="text-end">Harga</th>
+                        <th class="text-end">Stok</th>
                         @if (auth()->user()->isAdmin())
-                            <td>
-                                <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form method="POST" action="{{ route('products.destroy', $product) }}"
-                                      class="d-inline" onsubmit="return confirm('Hapus produk ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                            </td>
+                            <th style="width: 160px;">Aksi</th>
                         @endif
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center text-muted">Tidak ada data.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($products as $product)
+                        <tr>
+                            <td>
+                                @if ($product->image)
+                                    <img src="{{ $product->imageUrl() }}" alt="{{ $product->name }}"
+                                         style="width: 44px; height: 44px; object-fit: cover; border-radius: .5rem; border: 1px solid #e5eaf3;">
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center text-secondary"
+                                         style="width: 44px; height: 44px; border-radius: .5rem; background: #f1f5fb;">
+                                        <i class="bi bi-box-seam"></i>
+                                    </div>
+                                @endif
+                            </td>
+                            <td>{{ $product->sku }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ $product->category->name }}</td>
+                            <td class="text-end">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                            <td class="text-end">
+                                {{ $product->stock }}
+                                @if ($product->isLowStock())
+                                    <span class="badge bg-danger">Rendah</span>
+                                @endif
+                            </td>
+                            @if (auth()->user()->isAdmin())
+                                <td>
+                                    <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form method="POST" action="{{ route('products.destroy', $product) }}"
+                                          class="d-inline" onsubmit="return confirm('Hapus produk ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                    </form>
+                                </td>
+                            @endif
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Tidak ada data.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="mt-3">

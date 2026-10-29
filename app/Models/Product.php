@@ -13,7 +13,7 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'sku', 'name', 'description',
-        'price', 'stock', 'min_stock',
+        'price', 'stock', 'min_stock', 'image',
     ];
 
     protected function casts(): array
@@ -41,5 +41,11 @@ class Product extends Model
     public function isLowStock(): bool
     {
         return $this->stock <= $this->min_stock;
+    }
+
+    // URL foto, atau null kalau produk belum punya foto
+    public function imageUrl(): ?string
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
     }
 }
